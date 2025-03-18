@@ -1,0 +1,9 @@
+com\example\touristguide\repository\AnmeldelseRepository.class
+com\example\touristguide\repository\SeværdighedRepository.class
+com\example\touristguide\model\Bruger.class
+com\example\touristguide\repository\BrugerRepository.class
+com\example\touristguide\model\Anmeldelse.class
+com\example\touristguide\service\SeværdighedService.class
+com\example\touristguide\TuristguideApplikation.class
+com\example\touristguide\model\Seværdighed.class
+com\example\touristguide\controller\SeværdighedController.class

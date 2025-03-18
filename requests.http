@@ -1,0 +1,29 @@
+GET http://localhost:8080/attraktioner
+
+###
+
+GET http://localhost:8080/attraktioner/Tivoli
+
+###
+
+POST http://localhost:8080/attraktioner
+Content-Type: application/json
+
+{
+  "navn": "Legoland",
+  "beskrivelse": "Berømt temapark i Billund"
+}
+
+###
+
+PUT http://localhost:8080/attraktioner/Tivoli
+Content-Type: application/json
+
+{
+  "navn": "Tivoli Gardens",
+  "beskrivelse": "Historisk forlystelsespark i det centrale København"
+}
+
+###
+
+DELETE http://localhost:8080/attraktioner/Legoland
