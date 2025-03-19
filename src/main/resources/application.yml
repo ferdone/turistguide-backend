@@ -10,6 +10,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 # Server configuration
 server:
@@ -23,5 +26,10 @@ logging:
     org:
       springframework:
         web: INFO
+        jdbc: DEBUG
       hibernate:
-        SQL: DEBUG 
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: TRACE
+    com:
+      example:
+        touristguide: DEBUG
