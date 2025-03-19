@@ -4,21 +4,29 @@ spring:
     username: turistadmin
     password: password123-
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      connection-timeout: 20000
 
   jpa:
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        connection:
+          characterEncoding: utf-8
+          useUnicode: true
 
 # Server configuration
 server:
-  port: 8080
+  port: ${PORT:8080}
   servlet:
-    context-path: /api
+    context-path: /
 
 # Debug settings - remove in production!
 logging:
@@ -26,10 +34,10 @@ logging:
     org:
       springframework:
         web: INFO
-        jdbc: DEBUG
+        jdbc: INFO
       hibernate:
-        SQL: DEBUG
-        type.descriptor.sql.BasicBinder: TRACE
+        SQL: INFO
+        type.descriptor.sql.BasicBinder: INFO
     com:
       example:
-        touristguide: DEBUG
+        touristguide: INFO

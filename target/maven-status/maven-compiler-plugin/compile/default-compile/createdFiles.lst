@@ -7,5 +7,6 @@ com\example\touristguide\repository\BrugerRepository.class
 com\example\touristguide\model\Anmeldelse.class
 com\example\touristguide\service\SeværdighedService.class
 com\example\touristguide\TuristguideApplikation.class
+com\example\touristguide\controller\HomeController.class
 com\example\touristguide\model\Seværdighed.class
 com\example\touristguide\controller\SeværdighedController.class
