@@ -17,7 +17,7 @@ public class Seværdighed {
     public Seværdighed() {
     }
 
-    // lav ny seværdighed
+    // ny seværdighed
     public Seværdighed(String navn, String lokation, String beskrivelse) {
         this.navn = navn;
         this.lokation = lokation;

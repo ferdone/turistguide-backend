@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://turistguide-server.database.windows.net:1433;database=turistguide-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: turistadmin
+    password: password123-
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServerDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# Server configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Debug settings - remove in production!
+logging:
+  level:
+    org:
+      springframework:
+        web: INFO
+      hibernate:
+        SQL: DEBUG 

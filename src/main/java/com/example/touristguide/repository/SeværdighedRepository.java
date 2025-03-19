@@ -38,7 +38,6 @@ public class SeværdighedRepository {
             }
         } catch (SQLException e) {
             System.out.println("øv, kunne ikke hente: " + e.getMessage());
-            e.printStackTrace();
         }
         
         return seværdigheder;
@@ -64,8 +63,7 @@ public class SeværdighedRepository {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("fejl ved søgning efter " + navn + ": " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("fejl: " + e.getMessage());
         }
         
         return Optional.empty();
@@ -93,18 +91,13 @@ public class SeværdighedRepository {
             rs.close();
         } catch (SQLException e) {
             System.out.println("kunne ikke finde id " + id);
-            e.printStackTrace();
         }
         
         return Optional.empty();
     }
 
     public Seværdighed save(Seværdighed sev) {
-        if (sev.getId() != null && getById(sev.getId()).isPresent()) {
-            return update(sev);
-        } else {
-            return insert(sev);
-        }
+        return sev.getId() == null ? insert(sev) : update(sev);
     }
 
     private Seværdighed insert(Seværdighed sev) {
@@ -116,28 +109,19 @@ public class SeværdighedRepository {
             stmt.setString(1, sev.getNavn());
             stmt.setString(2, sev.getLokation());
             stmt.setString(3, sev.getBeskrivelse());
+            stmt.setBigDecimal(4, sev.getBedømmelse());
             
-            if (sev.getBedømmelse() != null) {
-                stmt.setBigDecimal(4, sev.getBedømmelse());
-            } else {
-                stmt.setBigDecimal(4, BigDecimal.ZERO);
-            }
+            int rowsAffected = stmt.executeUpdate();
             
-            int påvirkede = stmt.executeUpdate();
-            
-            if (påvirkede == 0) {
-                throw new SQLException("kunne ikke oprette seværdighed, ingen rækker påvirket");
-            }
-            
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    Long id = generatedKeys.getLong(1);
-                    sev.setId(id);
+            if (rowsAffected == 1) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        sev.setId(rs.getLong(1));
+                    }
                 }
             }
         } catch (SQLException e) {
-            System.out.println("fejl ved indsættelse: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("fejl ved insert: " + e.getMessage());
         }
         
         return sev;
@@ -157,8 +141,7 @@ public class SeværdighedRepository {
             
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("fejl ved opdatering: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("fejl: " + e.getMessage());
         }
         
         return sev;
@@ -171,11 +154,9 @@ public class SeværdighedRepository {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, navn);
-            int rowsDeleted = stmt.executeUpdate();
-            System.out.println("slettede " + rowsDeleted + " rækker");
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("fejl ved sletning: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("fejl: " + e.getMessage());
         }
     }
 } 

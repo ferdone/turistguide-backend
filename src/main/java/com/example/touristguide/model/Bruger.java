@@ -5,23 +5,21 @@ import java.util.List;
 
 // repræsenterer en bruger i systemet
 public class Bruger {
-    private Long id; // primær nøgle fra databasen
-    private String brugernavn; // unikt brugernavn
-    private String email; // email adresse (unik)
-    private String adgangskode; // TODO: kryptér dette senere
-    private List<Anmeldelse> anmeldelser = new ArrayList<>(); // brugerens anmeldelser
+    private Long id; 
+    private String brugernavn; 
+    private String email;
+    private String adgangskode;
+    private List<Anmeldelse> anmeldelser = new ArrayList<>();
 
-    // tom constructor til json/databinding
+    // tom constructor 
     public Bruger() {
-        // her kunne man initialisere noget, men det er ikke nødvendigt
     }
 
-    // constructor til at oprette nye brugere
+    // constructor
     public Bruger(String brugernavn, String email, String adgangskode) {
         this.brugernavn = brugernavn;
         this.email = email;
         this.adgangskode = adgangskode;
-        // TODO: kryptér password i en rigtig produktion
     }
 
     // getters og setters
@@ -66,10 +64,10 @@ public class Bruger {
         this.anmeldelser = anmeldelser;
     }
     
-    // tilføj en anmeldelse til brugerens liste
+    // anmeldelse til bruger liste
     public void addReview(Anmeldelse anmeldelse) {
         this.anmeldelser.add(anmeldelse);
-        anmeldelse.setBruger(this); // sætter referencen begge veje
+        anmeldelse.setBruger(this); // sæt reference
     }
     
     @Override

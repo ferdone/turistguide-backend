@@ -17,7 +17,6 @@ public class AnmeldelseRepository {
 
     public AnmeldelseRepository(DataSource dataSource) {
         this.dataSource = dataSource;
-        System.out.println("AnmeldelseRepository oprettet"); // debug print (fjern senere)
     }
 
     // get all reviews
@@ -40,50 +39,34 @@ public class AnmeldelseRepository {
                 anmeldelser.add(anm);
             }
         } catch (SQLException e) {
-            // ups fejl
-            System.out.println("fejl ved hentning: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("fejl: " + e.getMessage());
         }
         
         return anmeldelser;
     }
 
     public Optional<Anmeldelse> findById(Long id) {
-        // prøver at finde en anmeldelse med dette id
         String sql = "SELECT id, bruger_id, seværdighed_id, bedømmelse, kommentar, oprettet_dato FROM Anmeldelser WHERE id = ?";
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.prepareStatement(sql);
-            stmt.setLong(1, id);
-            rs = stmt.executeQuery();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            if (rs.next()) {
-                Anmeldelse anm = new Anmeldelse();
-                anm.setId(rs.getLong("id"));
-                anm.setUserId(rs.getLong("bruger_id"));
-                anm.setSeværdighedId(rs.getLong("seværdighed_id"));
-                anm.setBedømmelse(rs.getInt("bedømmelse"));
-                anm.setKommentar(rs.getString("kommentar"));
-                anm.setOprettetDato(rs.getTimestamp("oprettet_dato").toLocalDateTime());
-                return Optional.of(anm);
+            stmt.setLong(1, id);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Anmeldelse anm = new Anmeldelse();
+                    anm.setId(rs.getLong("id"));
+                    anm.setUserId(rs.getLong("bruger_id"));
+                    anm.setSeværdighedId(rs.getLong("seværdighed_id"));
+                    anm.setBedømmelse(rs.getInt("bedømmelse"));
+                    anm.setKommentar(rs.getString("kommentar"));
+                    anm.setOprettetDato(rs.getTimestamp("oprettet_dato").toLocalDateTime());
+                    return Optional.of(anm);
+                }
             }
         } catch (SQLException e) {
-            // fejl
-            System.out.println("fejl i findById: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            // luk alt (gammel måde - try-with-resources er bedre)
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace(); 
-            }
+            System.out.println("fejl: " + e.getMessage());
         }
         
         return Optional.empty();
@@ -111,9 +94,7 @@ public class AnmeldelseRepository {
                 }
             }
         } catch (SQLException e) {
-            // fejl
             System.out.println("noget gik galt: " + e.getMessage());
-            e.printStackTrace();
         }
         
         return anmeldelser;

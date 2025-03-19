@@ -2,26 +2,25 @@ package com.example.touristguide.model;
 
 import java.time.LocalDateTime;
 
-// klasse til anmeldelser af seværdigheder
+// klasse til anmeldelser
 public class Anmeldelse {
-    // disse felter matcher kolonner i databasen
+    // disse felter matcher 
     private Long id;
     private Long brugerId;
     private Long seværdighedId;
-    private Integer bedømmelse; // 1-5 stjerner
+    private Integer bedømmelse; 
     private String kommentar;
     private LocalDateTime oprettetDato;
     
-    // objektreferencer - bruges til relationer
-    private Bruger bruger; // en anmeldelse tilhører én bruger
-    private Seværdighed seværdighed; // en anmeldelse er om én seværdighed
+    // objektreferencer 
+    private Bruger bruger;
+    private Seværdighed seværdighed; 
 
-    // tom constructor til jackson/spring
+    // tom constructor 
     public Anmeldelse() {
-        // jackson kræver tom constructor
     }
 
-    // constructor til at oprette nye anmeldelser
+    // constructor 
     public Anmeldelse(Long brugerId, Long seværdighedId, Integer bedømmelse, String kommentar) {
         this.brugerId = brugerId;
         this.seværdighedId = seværdighedId;
@@ -30,7 +29,7 @@ public class Anmeldelse {
         this.oprettetDato = LocalDateTime.now(); // automatisk tidsstempel
     }
 
-    // getter og setter metoder nedenfor
+    // getter og setter 
 
     public Long getId() {
         return id;
