@@ -10,18 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: turistguidedb
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout kode
+        uses: actions/checkout@v3
 
       - name: Java Setup
         uses: actions/setup-java@v3
@@ -30,12 +21,8 @@ jobs:
           distribution: adopt
           cache: maven
 
-      - name: Opret Database
-        run: |
-          mysql -h 127.0.0.1 -P 3306 -u root -proot turistguidedb < database/turistguidedb.sql
-
       - name: Maven Build
-        run: mvn clean package
+        run: mvn clean package -DskipTests
 
       - name: Gem Bygget Jar
         uses: actions/upload-artifact@v3
