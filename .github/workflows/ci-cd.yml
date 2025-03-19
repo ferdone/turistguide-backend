@@ -73,19 +73,13 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml -DskipTests
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy to Azure App Service
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: turistguide-app
-          package: target/*.jar
+          app-name: 'turistguide-app'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
 
       - name: Azure SQL Deploy
         run: |
-          # Konfigurer Azure CLI til at forbinde til Azure SQL Database
           echo "Deploying database..."
           sqlcmd -S ${{ secrets.AZURE_SQL_SERVER }} -d ${{ secrets.AZURE_SQL_DB }} -U ${{ secrets.AZURE_SQL_USERNAME }} -P ${{ secrets.AZURE_SQL_PASSWORD }} -i database/turistguidedb.sql
