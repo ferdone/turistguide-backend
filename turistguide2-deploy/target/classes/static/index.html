@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8" />
+    <title>Turistguide</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <nav>
+        <h1>Velkommen til Turistguiden</h1>
+    </nav>
+    <main>
+        <p>Denne guide hjælper dig med at finde information om turistattraktioner.</p>
+        
+        <h2>Seværdigheder i Danmark</h2>
+        <div id="loading">Indlæser attraktioner...</div>
+        <div id="error" style="color: red; display: none;">Der opstod en fejl ved indlæsning af attraktioner.</div>
+        <div id="attractions-container"></div>
+        
+        <h2>Tilgængelige API Endpoints:</h2>
+        <ul>
+            <li><a href="/api/attraktioner">Se alle attraktioner (JSON)</a></li>
+        </ul>
+    </main>
+    <footer>
+        <p>Kontakt: info@turistguide.com</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attractionsContainer = document.getElementById('attractions-container');
+            const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('error');
+
+            // Hent attraktioner fra API
+            fetch('/api/attraktioner')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Netværksfejl: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(attraktioner => {
+                    loadingElement.style.display = 'none';
+                    
+                    if (attraktioner.length === 0) {
+                        attractionsContainer.innerHTML = '<p>Ingen attraktioner fundet.</p>';
+                        return;
+                    }
+
+                    // Opret HTML for hver attraktion
+                    const attractionsHTML = attraktioner.map(attraktion => `
+                        <div class="attraction-card">
+                            <h3>${attraktion.navn}</h3>
+                            <p><strong>Lokation:</strong> ${attraktion.lokation}</p>
+                            <p>${attraktion.beskrivelse}</p>
+                            <p><strong>Bedømmelse:</strong> ${attraktion.bedømmelse}/5</p>
+                        </div>
+                    `).join('');
+
+                    attractionsContainer.innerHTML = attractionsHTML;
+                })
+                .catch(error => {
+                    loadingElement.style.display = 'none';
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = 'Fejl ved indlæsning af attraktioner: ' + error.message;
+                    console.error('Fejl:', error);
+                });
+        });
+    </script>
+</body>
+</html>
