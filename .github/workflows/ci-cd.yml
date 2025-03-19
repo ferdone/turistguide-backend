@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,35 +24,9 @@ jobs:
       - name: Maven Build
         run: mvn clean package -DskipTests
 
-      - name: Gem Bygget Jar
-        uses: actions/upload-artifact@v3
-        with:
-          name: turistguide
-          path: target/*.jar
-          retention-days: 5
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-
-    steps:
-      - name: Hent Jar Fil
-        uses: actions/download-artifact@v3
-        with:
-          name: turistguide
-          path: ./
-
-      - name: Login til Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
       - name: Deploy til Azure
         uses: azure/webapps-deploy@v2
         with:
           app-name: turistguide-app
-          package: ./*.jar
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: target/*.jar
